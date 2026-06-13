@@ -31,6 +31,8 @@ create table bookings(
   booking_time timestamp default current_timestamp,
   unique(match_id, seat_number)
 );
+alter table bookings
+alter column payment_status drop not null;
 
 insert into users (full_name, email, role, phone_number, created_at) values
 ('Tanvir Rahman', 'tanvir@mail.com', 'Football Fan', '+8801711111111', '2025-12-01 10:15:00'),
@@ -124,3 +126,32 @@ values
 (8, 1009, 'I5', 'Cancelled', 100, '2025-12-19 06:10:00'),
 (9, 1100, 'J4', 'Confirmed', 90, '2025-12-20 20:00:00'),
 (10, 1100, 'J5', 'Pending', 90, '2025-12-20 20:10:00');
+
+insert into bookings (user_id, match_id, seat_number, payment_status, total_cost, booking_time)
+values
+(1, 1001, 'Z1', NULL, 150, '2025-12-21 10:00:00'),
+(2, 1002, 'Z2', NULL, 120, '2025-12-21 10:05:00'),
+(3, 1003, 'Z3', NULL, 130, '2025-12-21 10:10:00'),
+(4, 1004, 'Z4', NULL, 110, '2025-12-21 10:15:00'),
+(5, 1005, 'Z5', NULL, 140, '2025-12-21 10:20:00'),
+(6, 1006, 'Z6', NULL, 125, '2025-12-21 10:25:00'),
+(7, 1007, 'Z7', NULL, 135, '2025-12-21 10:30:00'),
+(8, 1008, 'Z8', NULL, 95,  '2025-12-21 10:35:00'),
+(9, 1009, 'Z9', NULL, 100, '2025-12-21 10:40:00'),
+(10, 1100, 'Z10', NULL, 90, '2025-12-21 10:45:00');
+
+-- Query 1: Retrieve all upcoming football matches belonging to the 'Champions League' 
+-- where the match status is 'Available'.
+select match_id, fixture, base_ticket_price from matches where tournament_category = 'Champions League';
+
+-- Query 2: Search for all users whose full names start with 'Tanvir'
+-- or contain the phrase 'Haque' (case-insensitive).
+select user_id, full_name, email from users 
+  where full_name ilike 'Tanvir%'
+  or full_name ilike '%Haque%';
+
+-- Query 3: Retrieve all booking records where the payment status is missing (NULL), 
+-- replacing the empty result with 'Action Required'.
+select booking_id, user_id, match_id, 
+  coalesce(payment_status::text, 'Action Required') as systematic_status
+  from bookings where payment_status is null;
