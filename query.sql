@@ -26,13 +26,11 @@ create table bookings(
   user_id int not null references users(user_id) on delete cascade,
   match_id int not null references matches(match_id) on delete cascade,
   seat_number varchar(10) not null,
-  payment_status payment_status_enum not null,
+  payment_status payment_status_enum,
   total_cost int not null,
   booking_time timestamp default current_timestamp,
   unique(match_id, seat_number)
 );
-alter table bookings
-alter column payment_status drop not null;
 
 insert into users (full_name, email, role, phone_number, created_at) values
 ('Tanvir Rahman', 'tanvir@mail.com', 'Football Fan', '+8801711111111', '2025-12-01 10:15:00'),
@@ -56,89 +54,53 @@ insert into users (full_name, email, role, phone_number, created_at) values
 ('Ayesha Akter', 'ayesha@mail.com', 'Football Fan', '+8801888888888', '2025-12-18 19:10:00'),
 ('Hasan Mahmud', 'hasan@mail.com', 'Stadium Manager', '+8801899999999', '2025-12-19 06:50:00'),
 ('Omar Faruk', 'omar@mail.com', 'Ticket Manager', '+8801700000000', '2025-12-20 20:05:00');
-
-insert into matches (match_id, fixture, tournament_category, base_ticket_price, match_status, match_date)
+insert into users (full_name, email, role, phone_number, created_at)
 values
-(1001, 'Real Madrid vs Barcelona', 'Champions League', 150, 'Available', '2025-12-21'),
-(1002, 'Man City vs Liverpool', 'Premier League', 120, 'Selling Fast', '2025-12-22'),
-(1003, 'Bayern Munich vs PSG', 'Champions League', 130, 'Available', '2025-12-23'),
-(1004, 'Arsenal vs Chelsea', 'Premier League', 110, 'Sold Out', '2025-12-24'),
-(1005, 'Inter Milan vs AC Milan', 'Champions League', 140, 'Postponed', '2025-12-25'),
-(1006, 'Manchester United vs Tottenham', 'Premier League', 125, 'Available', '2025-12-26'),
-(1007, 'Dortmund vs Juventus', 'Champions League', 135, 'Selling Fast', '2025-12-27'),
-(1008, 'Newcastle vs Aston Villa', 'Premier League', 95, 'Available', '2025-12-28'),
-(1009, 'Porto vs Benfica', 'Champions League', 100, 'Sold Out', '2025-12-29'),
-(1100, 'Brighton vs West Ham', 'Premier League', 90, 'Available', '2025-12-30');
+('Faisal Ahmed', 'faisal.ahmed@mail.com', 'Football Fan', '+8801900000001', '2025-11-15 09:10:00'),
+('Nadia Khan', 'nadia.khan@mail.com', 'Football Fan', '+8801900000002', '2025-12-18 17:45:00');
 
-insert into bookings (user_id, match_id, seat_number, payment_status, total_cost, booking_time)
-values
-(1, 1001, 'A1', 'Confirmed', 150, '2025-12-01 10:00:00'),
-(2, 1001, 'A2', 'Pending', 150, '2025-12-01 10:05:00'),
-(3, 1001, 'A3', 'Confirmed', 150, '2025-12-01 10:10:00'),
-(4, 1002, 'B1', 'Cancelled', 120, '2025-12-02 11:00:00'),
-(5, 1002, 'B2', 'Confirmed', 120, '2025-12-02 11:10:00'),
-(6, 1002, 'B3', 'Pending', 120, '2025-12-02 11:20:00'),
-(7, 1003, 'C1', 'Confirmed', 130, '2025-12-03 09:00:00'),
-(8, 1003, 'C2', 'Refunded', 130, '2025-12-03 09:10:00'),
-(9, 1003, 'C3', 'Confirmed', 130, '2025-12-03 09:20:00'),
-(10, 1004, 'D1', 'Confirmed', 110, '2025-12-04 14:00:00'),
+INSERT INTO matches (fixture, tournament_category, base_ticket_price, match_status, match_date) VALUES
+('Real Madrid vs Barcelona', 'Champions League', 500, 'Available', '2026-07-01'),
+('Manchester City vs PSG', 'Champions League', 450, 'Selling Fast', '2026-07-02'),
+('Bayern Munich vs Dortmund', 'Champions League', 400, 'Available', '2026-07-03'),
+('Liverpool vs Arsenal', 'Premier League', 300, 'Available', '2026-07-04'),
+('Chelsea vs Tottenham', 'Premier League', 280, 'Selling Fast', '2026-07-05'),
+('Juventus vs Inter Milan', 'Champions League', 350, 'Available', '2026-07-06'),
+('AC Milan vs Napoli', 'Premier League', 320, 'Available', '2026-07-07'),
+('Atletico Madrid vs Sevilla', 'Premier League', 270, 'Sold Out', '2026-07-08'),
+('Benfica vs Porto', 'Champions League', 260, 'Available', '2026-07-09'),
+('Borussia Dortmund vs RB Leipzig', 'Champions League', 380, 'Available', '2026-07-10');
 
-(11, 1004, 'D2', 'Pending', 110, '2025-12-04 14:10:00'),
-(12, 1004, 'D3', 'Cancelled', 110, '2025-12-04 14:20:00'),
-(13, 1005, 'E1', 'Confirmed', 140, '2025-12-05 08:00:00'),
-(14, 1005, 'E2', 'Pending', 140, '2025-12-05 08:15:00'),
-(15, 1005, 'E3', 'Refunded', 140, '2025-12-05 08:30:00'),
-(16, 1006, 'F1', 'Confirmed', 125, '2025-12-06 16:00:00'),
-(17, 1006, 'F2', 'Pending', 125, '2025-12-06 16:10:00'),
-(18, 1006, 'F3', 'Confirmed', 125, '2025-12-06 16:20:00'),
-(19, 1007, 'G1', 'Cancelled', 135, '2025-12-07 13:00:00'),
-(20, 1007, 'G2', 'Confirmed', 135, '2025-12-07 13:10:00'),
+INSERT INTO bookings (user_id, match_id, seat_number, payment_status, total_cost) VALUES
 
-(1, 1007, 'G3', 'Pending', 135, '2025-12-07 13:20:00'),
-(2, 1008, 'H1', 'Confirmed', 95, '2025-12-08 18:00:00'),
-(3, 1008, 'H2', 'Pending', 95, '2025-12-08 18:10:00'),
-(4, 1008, 'H3', 'Confirmed', 95, '2025-12-08 18:20:00'),
-(5, 1009, 'I1', 'Confirmed', 100, '2025-12-09 07:30:00'),
-(6, 1009, 'I2', 'Cancelled', 100, '2025-12-09 07:40:00'),
-(7, 1009, 'I3', 'Confirmed', 100, '2025-12-09 07:50:00'),
-(8, 1100, 'J1', 'Pending', 90, '2025-12-10 12:00:00'),
-(9, 1100, 'J2', 'Confirmed', 90, '2025-12-10 12:10:00'),
-(10, 1100, 'J3', 'Refunded', 90, '2025-12-10 12:20:00'),
+(1, 1, 'A1', NULL, 500),
+(2, 2, 'A1', NULL, 450),
+(3, 3, 'A1', NULL, 400),
+(4, 4, 'A1', NULL, 300),
+(5, 5, 'A1', NULL, 280),
 
-(11, 1001, 'A4', 'Confirmed', 150, '2025-12-11 10:00:00'),
-(12, 1001, 'A5', 'Pending', 150, '2025-12-11 10:10:00'),
-(13, 1002, 'B4', 'Confirmed', 120, '2025-12-12 11:00:00'),
-(14, 1002, 'B5', 'Cancelled', 120, '2025-12-12 11:10:00'),
-(15, 1003, 'C4', 'Confirmed', 130, '2025-12-13 09:00:00'),
-(16, 1003, 'C5', 'Pending', 130, '2025-12-13 09:10:00'),
-(17, 1004, 'D4', 'Confirmed', 110, '2025-12-14 15:00:00'),
-(18, 1004, 'D5', 'Cancelled', 110, '2025-12-14 15:10:00'),
-(19, 1005, 'E4', 'Confirmed', 140, '2025-12-15 17:00:00'),
-(20, 1005, 'E5', 'Pending', 140, '2025-12-15 17:10:00'),
+(6, 6, 'A2', 'Confirmed', 350),
+(7, 7, 'B1', 'Pending', 320),
+(8, 8, 'C1', 'Confirmed', 270),
+(9, 9, 'D1', 'Confirmed', 260),
+(10, 10, 'E1', 'Pending', 380),
 
-(1, 1006, 'F4', 'Confirmed', 125, '2025-12-16 08:00:00'),
-(2, 1006, 'F5', 'Pending', 125, '2025-12-16 08:10:00'),
-(3, 1007, 'G4', 'Confirmed', 135, '2025-12-17 14:00:00'),
-(4, 1007, 'G5', 'Cancelled', 135, '2025-12-17 14:10:00'),
-(5, 1008, 'H4', 'Confirmed', 95, '2025-12-18 19:00:00'),
-(6, 1008, 'H5', 'Pending', 95, '2025-12-18 19:10:00'),
-(7, 1009, 'I4', 'Confirmed', 100, '2025-12-19 06:00:00'),
-(8, 1009, 'I5', 'Cancelled', 100, '2025-12-19 06:10:00'),
-(9, 1100, 'J4', 'Confirmed', 90, '2025-12-20 20:00:00'),
-(10, 1100, 'J5', 'Pending', 90, '2025-12-20 20:10:00');
+(1, 1, 'A3, A4', 'Confirmed', 1000),
+(2, 2, 'B2, B3', 'Confirmed', 900),
+(3, 3, 'C2, C3', 'Pending', 800),
+(4, 4, 'D2, D3', 'Confirmed', 600),
+(5, 5, 'E2, E3', 'Confirmed', 560),
+(6, 6, 'F1, F2', 'Confirmed', 700),
+(7, 7, 'G1, G2', 'Pending', 640),
+(8, 8, 'H1, H2', 'Confirmed', 540),
+(9, 9, 'I1, I2', 'Confirmed', 520),
+(10, 10, 'J1, J2', 'Confirmed', 760),
 
-insert into bookings (user_id, match_id, seat_number, payment_status, total_cost, booking_time)
-values
-(1, 1001, 'Z1', NULL, 150, '2025-12-21 10:00:00'),
-(2, 1002, 'Z2', NULL, 120, '2025-12-21 10:05:00'),
-(3, 1003, 'Z3', NULL, 130, '2025-12-21 10:10:00'),
-(4, 1004, 'Z4', NULL, 110, '2025-12-21 10:15:00'),
-(5, 1005, 'Z5', NULL, 140, '2025-12-21 10:20:00'),
-(6, 1006, 'Z6', NULL, 125, '2025-12-21 10:25:00'),
-(7, 1007, 'Z7', NULL, 135, '2025-12-21 10:30:00'),
-(8, 1008, 'Z8', NULL, 95,  '2025-12-21 10:35:00'),
-(9, 1009, 'Z9', NULL, 100, '2025-12-21 10:40:00'),
-(10, 1100, 'Z10', NULL, 90, '2025-12-21 10:45:00');
+(1, 1, 'M1, M2, M3', 'Confirmed', 1500),
+(2, 2, 'M1, M2, M3', 'Pending', 1350),
+(3, 3, 'M1, M2, M3', 'Confirmed', 1200),
+(4, 4, 'M1, M2, M3', 'Confirmed', 900),
+(5, 5, 'M1, M2, M3', 'Pending', 840);
 
 -- Query 1: Retrieve all upcoming football matches belonging to the 'Champions League' 
 -- where the match status is 'Available'.
@@ -155,3 +117,32 @@ select user_id, full_name, email from users
 select booking_id, user_id, match_id, 
   coalesce(payment_status::text, 'Action Required') as systematic_status
   from bookings where payment_status is null;
+
+-- Query 4: Retrieve match booking details along with the User's full name 
+-- and the scheduled Match fixture teams.
+select
+  b.booking_id,
+  u.full_name,
+  m.fixture,
+  b.total_cost
+from bookings b
+inner join users u on b.user_id = u.user_id
+inner join matches m on b.match_id = m.match_id;
+
+-- Query 5: Display a comprehensive list of all users and their booking IDs, 
+-- ensuring that fans who have never bought a ticket are still listed.
+select u.user_id, u.full_name, b.booking_id 
+  from users u 
+  left join bookings b on u.user_id = b.user_id
+  order by u.user_id;
+
+-- Query 6: Find all ticket bookings where the total cost is strictly higher 
+select booking_id, match_id, total_cost 
+  from bookings 
+  where total_cost > (select avg(total_cost) from bookings)
+  order by match_id;
+
+
+--   Query 7: Retrieve the top 2 most expensive matches sorted by base ticket price, 
+select * from matches order by base_ticket_price desc
+  offset 1 limit 2;
